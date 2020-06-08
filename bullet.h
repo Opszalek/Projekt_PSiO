@@ -5,28 +5,27 @@
 #include <iostream>
 
 
-class Bullet
+class Bullet : public sf::Sprite
 {
 public:
-    Bullet(sf::Vector2f size) { bullet.setSize(size);
-     bullet.setFillColor(sf::Color(100, 50, 250));};
+    Bullet(sf::Vector2f size, std::string dir_)
+    {
+        bullet.setSize(size);
+        bullet.setFillColor(sf::Color(100, 50, 250));
+        dir = dir_;
+    };
 
-    void fire(float time,std::string direction_);
-    int getRight() { return bullet.getPosition().x + bullet.getSize().x; }
-    int getLeft() { return bullet.getPosition().x; }
-    int getTop() { return bullet.getPosition().y; }
-    int getBottom() { return bullet.getPosition().y + bullet.getSize().y; }
+    void fire(float time);
     void setPos(sf::Vector2f newPos) {
         bullet.setPosition(newPos);
     }
-    void draw(sf::RenderWindow &window) {
+    void drawo(sf::RenderWindow &window) {
         window.draw(bullet);
     }
-private:
+    int bullet_speed=100;
     sf::RectangleShape bullet;
-
-
+private:
+    std::string dir;
 
 };
-
 #endif // BULLET_H
