@@ -3,6 +3,7 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
 #include <TextureManager.h>
+#include <math.h>
 character::character()
 {
 
@@ -30,110 +31,113 @@ void character::movement(sf::Sprite &postac, float time, sf::Sprite &hp)
     }
     hp.move(xv * time, yv * time);
     postac.move(xv * time, yv * time);
+    direction();
+}
+
+void character::movement2(sf::Sprite &postac, float time, sf::Sprite &hp)
+{
+    float xv = 0;
+    float yv = 0;
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
+        yv = m_speed_;
+    }
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
+        xv = -m_speed_;
+    }
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
+        xv = m_speed_;
+    }
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
+        yv = -m_speed_;
+    }
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::LShift)) {
+        yv = yv * 3;
+        xv = xv * 3;
+    }
+    hp.move(xv * time, yv * time);
+    postac.move(xv * time, yv * time);
+    direction();
 }
 
 void character::zdrowie(float dmg, sf::Sprite &hp, sf::Texture &texture)
 {
-    if (health_ >= 0) {
+    if (health_ >= 0 && health_<=health_max) {
+
         health_ = health_ - dmg;
     }
-        float procent = health_ / 1000.0;
+        float procent = health_ / health_max;
 
-    std::cout << procent << std::endl;
 
-    try {
-        if (procent == 1) {
-            if (!texture.loadFromFile("Tekstury/hp100.png")) {
-                throw 1;
-            }
+
+
+        if (procent == 1)
+        {
+          hp.setTextureRect(sf::IntRect(0, 0, 100, 10));
         } else if (procent<1 && procent>0.9) {
-                if (!texture.loadFromFile("Tekstury/hp90.png")) {
-                    throw 1;
-                }
+                hp.setTextureRect(sf::IntRect(0, 10, 100, 10));
             } else if (procent<0.9 && procent>0.8) {
-                if (!texture.loadFromFile("Tekstury/hp80.png")) {
-                    throw 1;
-                }
+                hp.setTextureRect(sf::IntRect(0, 20, 100, 10));
             }
             else if (procent<0.8 && procent>0.7) {
-                if (!texture.loadFromFile("Tekstury/hp70.png")) {
-                    throw 1;
-                }
+                hp.setTextureRect(sf::IntRect(0, 30, 100, 10));
             }
             else if (procent<0.7 && procent>0.6) {
-                if (!texture.loadFromFile("Tekstury/hp60.png")) {
-                    throw 1;
-                }
+                hp.setTextureRect(sf::IntRect(0, 40, 100, 10));
             }
             else if (procent<0.6 && procent>0.5) {
-                if (!texture.loadFromFile("Tekstury/hp50.png")) {
-                    throw 1;
-                }
+               hp.setTextureRect(sf::IntRect(0,50, 100, 10));
             }
             else if (procent<0.5 && procent>0.4) {
-                if (!texture.loadFromFile("Tekstury/hp40.png")) {
-                    throw 1;
-                }
+               hp.setTextureRect(sf::IntRect(0, 60, 100, 10));
             }
             else if (procent<0.4 && procent>0.3) {
-                if (!texture.loadFromFile("Tekstury/hp30.png")) {
-                    throw 1;
-                }
+                hp.setTextureRect(sf::IntRect(0, 70, 100, 10));
             }
             else if (procent<0.3 && procent>0.2) {
-                if (!texture.loadFromFile("Tekstury/hp20.png")) {
-                    throw 1;
-                }
+                hp.setTextureRect(sf::IntRect(0, 80, 100, 10));
             }
             else if (procent<0.2 && procent>0.1) {
-                if (!texture.loadFromFile("Tekstury/hp10.png")) {
-                    throw 1;
-                }
+                hp.setTextureRect(sf::IntRect(0, 90, 100, 10));
             }else if (procent<0.1 && procent>=0) {
-                if (!texture.loadFromFile("Tekstury/hp0_1.png")) {
-                    throw 1;
-                }
+                hp.setTextureRect(sf::IntRect(0, 100, 100, 10));
             }
 
-    } catch (...) {
-
-    }
-    hp.setTexture(texture);
-    hp.setTextureRect(sf::IntRect(0, 0, 100,20)); //left, top, width, height
 
 }
 std::string character::direction()
 {
-    std::string last;
+
 
 
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)
             && sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
-            direction_ = "NE";
+            direction_ = "NE";ismoving = true;
         }
         else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)
                  && sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
-            direction_ = "NW";
+            direction_ = "NW";ismoving = true;
         }
         else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)
                  && sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
-            direction_ = "SW";
+            direction_ = "SW";ismoving = true;
         }
         else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)
                  && sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
-            direction_ = "SE";
+            direction_ = "SE";ismoving = true;
         } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
-            direction_ = 'W';
+            direction_ = 'W';ismoving = true;
         }
         else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
-            direction_ = 'E';
+            direction_ = 'E';ismoving = true;
         }
         else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
-            direction_ = 'S';
+            direction_ = 'S';ismoving = true;
         }
         else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
             direction_ = 'N';
-        }
+            ismoving = true;
+        } else {
+            ismoving = false;}
 
 
 

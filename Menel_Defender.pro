@@ -7,6 +7,7 @@ SOURCES += \
         TextureManager.cpp \
         bullet.cpp \
         character.cpp \
+        enemy.cpp \
         main.cpp
 LIBS += -L"D:\Aplikacje\SFML\SFML-2.5.1\lib"
 CONFIG(debug, debug|release){
@@ -18,4 +19,5 @@ CONFIG(debug, debug|release){
 HEADERS += \
     TextureManager.h \
     bullet.h \
-    character.h
+    character.h \
+    enemy.h

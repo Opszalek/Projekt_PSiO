@@ -2,25 +2,26 @@
 
 
 
-void Bullet::fire(float time, std::string direction_)
+void Bullet::fire(float time)
 {
 
-     if (direction_ == "NE") {
-        bullet.move(100 * time, -100 * time);
-    } else if (direction_ == "SE") {
-        bullet.move(100 * time, 100 * time);
-    } else if (direction_ == "SW") {
-        bullet.move(-100 * time, 100 * time);
-    } else if (direction_ == "NW") {
-        bullet.move(-100 * time, -100 * time);
-    }else if (direction_ == "N") {
-        bullet.move(0, -100 * time);
-    } else if (direction_ == "E") {
-        bullet.move(100 * time, 0 * time);
-    } else if (direction_ == "S") {
-        bullet.move(0, 100 * time);
-    } else if (direction_ == "W") {
-        bullet.move(-100 * time, 0);
+
+    if (dir == "NE") {
+        bullet.move(bullet_speed * time, -bullet_speed * time);
+    } else if (dir == "SE") {
+        bullet.move(bullet_speed * time, bullet_speed * time);
+    } else if (dir == "SW") {
+        bullet.move(-bullet_speed * time, bullet_speed * time);
+    } else if (dir == "NW") {
+        bullet.move(-bullet_speed * time, -bullet_speed * time);
+    } else if (dir == "N") {
+        bullet.move(0, -bullet_speed * time);
+    } else if (dir == "E") {
+        bullet.move(bullet_speed * time, 0 * time);
+    } else if (dir == "S") {
+        bullet.move(0, bullet_speed * time);
+    } else if (dir == "W") {
+        bullet.move(-bullet_speed * time, 0);
     }
 
 
