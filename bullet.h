@@ -3,6 +3,7 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>
 #include <iostream>
+#include <character.h>
 
 
 class Bullet : public sf::Sprite
@@ -15,15 +16,17 @@ public:
         dir = dir_;
     };
 
-    void fire(float time);
+    void fire(float time); //funkcja od ruchu pocisku
+    void shoot(character);//funkcja od tworzenia pocisków
     void setPos(sf::Vector2f newPos) {
         bullet.setPosition(newPos);
     }
     void drawo(sf::RenderWindow &window) {
         window.draw(bullet);
     }
-    int bullet_speed=100;
+    int bullet_speed=800;
     sf::RectangleShape bullet;
+    std::vector<Bullet> bulletVec;
 private:
     std::string dir;
 

@@ -7,10 +7,12 @@
 #include <enemy.h>
 
 
+
+
 int main()
 {
     // Loading all textures in TextureManager
-    TextureManager::loadTexture("texture_guy", "Tekstury/head.png");
+    TextureManager::loadTexture("texture_guy", "Tekstury/player.png");
     TextureManager::loadTexture("texture_hp", "Tekstury/hp.png");
     TextureManager::loadTexture("texture_wall", "Tekstury/kostka.png");
     TextureManager::loadTexture("enemy1", "Tekstury/emove1.png");
@@ -48,22 +50,24 @@ int main()
     sf::Sprite player_hp;
     player_hp.setTexture(*TextureManager::getTexture("texture_hp"));
     player_hp.setTextureRect(sf::IntRect(0, 0, 100, 10)); //left, top, width, height
-    player_hp.setPosition(275.0, 275.0);
+    player_hp.setPosition(250.0, 250.0);
 
     character player;
     player.setTexture(*TextureManager::getTexture("texture_guy"));
-    player.setTextureRect(sf::IntRect(0, 0, 45, 90));
+    player.setTextureRect(sf::IntRect(0, 0, 49, 43));
+    player.setOrigin(25, 21);
     player.setPosition(300.0, 300.0);
 
     // Create second player character
     sf::Sprite playerone_hp;
     playerone_hp.setTexture(*TextureManager::getTexture("texture_hp"));
     playerone_hp.setTextureRect(sf::IntRect(0, 0, 100, 10)); //left, top, width, height
-    playerone_hp.setPosition(375.0, 375.0);
+    playerone_hp.setPosition(350.0, 350.0);
 
     character playerone;
     playerone.setTexture(*TextureManager::getTexture("texture_guy"));
-    playerone.setTextureRect(sf::IntRect(0, 0, 45, 90));
+    playerone.setTextureRect(sf::IntRect(0, 0, 49, 43));
+    playerone.setOrigin(25, 21);
     playerone.setPosition(400.0, 400.0);
 
     //create enemy
@@ -79,7 +83,8 @@ int main()
 
     sf::Clock delay;
     sf::Clock delay2;
-
+    sf::Clock delay3;
+    int razraz = 0;
     while (window.isOpen()) {
         while (window.pollEvent(event)) {
             // "close requested" event: we close the window
@@ -104,38 +109,50 @@ int main()
             playerone.zdrowie(-1, playerone_hp, *TextureManager::getTexture("texture_hp"));
 
         }
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::K)) {
-            player.zdrowie(-1, player_hp, *TextureManager::getTexture("texture_hp"));
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::K)&& (delay3.getElapsedTime().asMilliseconds() > 300)) {
+
         }
 
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Z) && (delay2.getElapsedTime().asMilliseconds() > 200)) {
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Z) && (delay2.getElapsedTime().asMilliseconds() > 50)) {
             enemy zombie;
             zombie.setTexture(*TextureManager::getTexture("enemy1"));
             zombie.setTextureRect(sf::IntRect(0, 0, 288, 311));
-            zombie.setPosition(rand() % 600, rand() % 600);
+            zombie.setPosition(rand() % window.getSize().x , rand() % window.getSize().y);
             zombie.scale(0.3, 0.3);
+            zombie.setOrigin(144, 155);
             zombieVec.emplace_back(zombie);
             delay2.restart();
+            razraz++;
+            std::cout << razraz << std::endl;
         }
 
 
 
         //tworzenie pocisków
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::M)
-            && (delay.getElapsedTime().asMilliseconds() > 150)) {
+            && (delay.getElapsedTime().asMilliseconds() > 30)) {
             Bullet newbullet(sf::Vector2f(10, 10), player.direction());
             newbullet.setPos(sf::Vector2f(player.getPosition().x + 10, player.getPosition().y + 20));
             if (player.ismoving == true) {
                 newbullet.bullet_speed = newbullet.bullet_speed + player.m_speed();
             }
             bulletVec.emplace_back(newbullet);
+
             delay.restart();
         }
         //sprawdzanie kolizji
         for (auto i = 0;i <bulletVec.size(); i++) {
+            if (bulletVec[i].bullet.getPosition().x > window.getSize().x
+                || bulletVec[i].bullet.getPosition().x < 0
+                || bulletVec[i].bullet.getPosition().y > window.getSize().y
+                || bulletVec[i].bullet.getPosition().y < 0) {
+                bulletVec.erase(bulletVec.begin() + i);
+
+            }
             if (bulletVec[i].bullet.getGlobalBounds().intersects(playerone.getGlobalBounds())) {
                 playerone.zdrowie(100, playerone_hp, *TextureManager::getTexture("texture_hp"));
                 bulletVec.erase(bulletVec.begin() + i);
+
 
             }
 
@@ -146,18 +163,14 @@ int main()
                         bulletVec.erase(bulletVec.begin() + i);
                         if (zombieVec[k].alive(100)) {
                             zombieVec.erase(zombieVec.begin() + k);
+                            razraz--;
                         }
                     }
                 }
             }
 
-
         }
-        if(sf::Keyboard::isKeyPressed(sf::Keyboard::G))
-            {
 
-        player.scale(1, -1);
-            }
         //rysowanie
         window.draw(wall);
         window.draw(player_hp);
@@ -167,6 +180,12 @@ int main()
 
         for (auto &z : zombieVec) {
             window.draw(z);
+            z.find_way(player, czas);
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::K)
+                && (delay3.getElapsedTime().asMilliseconds() > 300)) {
+                z.rotate(10);
+            }
+
         }
         for (auto &r : bulletVec) {
             r.drawo(window);

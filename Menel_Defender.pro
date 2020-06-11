@@ -8,7 +8,8 @@ SOURCES += \
         bullet.cpp \
         character.cpp \
         enemy.cpp \
-        main.cpp
+        main.cpp \
+        weapons.cpp
 LIBS += -L"D:\Aplikacje\SFML\SFML-2.5.1\lib"
 CONFIG(debug, debug|release){
     LIBS += -lsfml-audio-d -lsfml-graphics-d -lsfml-network-d -lsfml-system-d -lsfml-window-d
@@ -20,4 +21,5 @@ HEADERS += \
     TextureManager.h \
     bullet.h \
     character.h \
-    enemy.h
+    enemy.h \
+    weapons.h
