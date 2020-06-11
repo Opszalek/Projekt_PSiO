@@ -15,15 +15,19 @@ void character::movement(sf::Sprite &postac, float time, sf::Sprite &hp)
     float yv = 0;
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
         yv = m_speed_;
+        setRotation(90);
     }
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
         xv = -m_speed_;
+        setRotation(180);
     }
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
         xv = m_speed_;
+        setRotation(0);
     }
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
         yv = -m_speed_;
+        setRotation(-90);
     }
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::LShift)) {
         yv = yv * 3;
@@ -32,6 +36,7 @@ void character::movement(sf::Sprite &postac, float time, sf::Sprite &hp)
     hp.move(xv * time, yv * time);
     postac.move(xv * time, yv * time);
     direction();
+
 }
 
 void character::movement2(sf::Sprite &postac, float time, sf::Sprite &hp)
@@ -40,15 +45,19 @@ void character::movement2(sf::Sprite &postac, float time, sf::Sprite &hp)
     float yv = 0;
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
         yv = m_speed_;
+        setRotation(90);
     }
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
         xv = -m_speed_;
+        setRotation(180);
     }
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
         xv = m_speed_;
+        setRotation(0);
     }
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
         yv = -m_speed_;
+        setRotation(-90);
     }
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::LShift)) {
         yv = yv * 3;
@@ -112,18 +121,22 @@ std::string character::direction()
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)
             && sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
             direction_ = "NE";ismoving = true;
+
         }
         else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)
                  && sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
             direction_ = "NW";ismoving = true;
+
         }
         else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)
                  && sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
             direction_ = "SW";ismoving = true;
+
         }
         else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)
                  && sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
             direction_ = "SE";ismoving = true;
+
         } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
             direction_ = 'W';ismoving = true;
         }
