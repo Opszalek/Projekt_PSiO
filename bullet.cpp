@@ -27,8 +27,8 @@ void Bullet::fire(float time)
 
 
 }
-
-void Bullet::shoot(character player)
+/*
+void Bullet::shoot(character & player)
 {
     Bullet newbullet(sf::Vector2f(10, 10), player.direction());
     newbullet.setPos(sf::Vector2f(player.getPosition().x + 10, player.getPosition().y + 20));
@@ -37,3 +37,4 @@ void Bullet::shoot(character player)
     }
     bulletVec.emplace_back(newbullet);
 }
+*/

@@ -8,7 +8,9 @@ SOURCES += \
         bullet.cpp \
         character.cpp \
         enemy.cpp \
+        game.cpp \
         main.cpp \
+        uzi.cpp \
         weapons.cpp
 LIBS += -L"D:\Aplikacje\SFML\SFML-2.5.1\lib"
 CONFIG(debug, debug|release){
@@ -22,4 +24,6 @@ HEADERS += \
     bullet.h \
     character.h \
     enemy.h \
+    game.h \
+    uzi.h \
     weapons.h

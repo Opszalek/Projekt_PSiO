@@ -10,9 +10,10 @@ public:
     enemy();
     void find_way(sf::Sprite&,float);
     bool alive(float);
+    int dmg;
 private:
     float health_ = 1000;
-    float m_speed_ = 80;
+    float m_speed_ =50.0;
     float health_max = 1000;
 
 };

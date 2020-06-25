@@ -9,23 +9,23 @@ character::character()
 
 }
 
-void character::movement(sf::Sprite &postac, float time, sf::Sprite &hp)
+void character::movement(sf::Sprite &postac, float time, sf::Sprite &hp, sf::RenderWindow &win)
 {
     float xv = 0;
     float yv = 0;
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down) && (postac.getGlobalBounds().top+postac.getGlobalBounds().height)<win.getSize().y)  {
         yv = m_speed_;
         setRotation(90);
     }
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left) && postac.getGlobalBounds().left>0) {
         xv = -m_speed_;
         setRotation(180);
     }
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right) && (postac.getGlobalBounds().left+postac.getGlobalBounds().width)<win.getSize().x) {
         xv = m_speed_;
         setRotation(0);
     }
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) && postac.getGlobalBounds().top>0) {
         yv = -m_speed_;
         setRotation(-90);
     }
@@ -35,6 +35,7 @@ void character::movement(sf::Sprite &postac, float time, sf::Sprite &hp)
     }
     hp.move(xv * time, yv * time);
     postac.move(xv * time, yv * time);
+
     direction();
 
 }

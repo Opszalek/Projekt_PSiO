@@ -10,12 +10,12 @@ public:
     character();
     int m_speed(){return m_speed_;}; //prędkość poruszania się
     float sprint; // Czas przez jaki postać może biec sprintem
-    void movement(sf::Sprite &postac, float time,sf::Sprite &hp);//poruszanie sie postaci
+    void movement(sf::Sprite &postac, float time,sf::Sprite &hp,sf::RenderWindow&);//poruszanie sie postaci
     void movement2(sf::Sprite &postac, float time,sf::Sprite &hp);//poruszanie sie drugiej postaci 2 players mode
     void zdrowie(float dmg,sf::Sprite &hp,sf::Texture & texture);//funkcja zadająca obrażenia oraz funkcja do healania
     std::string direction();
     bool ismoving;// do sprawdzania czy postać sie porusza, ponieważ czasami trzeba prędkość pocisku zwiększyć
-
+    sf::Sprite player_hp;
 private:
     float health_ = 1000; // zdrowie czempiona naszego
     float health_max = 1000;
