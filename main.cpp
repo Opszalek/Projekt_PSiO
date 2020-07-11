@@ -19,7 +19,7 @@ int main()
     // Loading all textures in TextureManager
     TextureManager::loadTexture("texture_guy", "Tekstury/player.png");
     TextureManager::loadTexture("texture_hp", "Tekstury/hp.png");
-    TextureManager::loadTexture("texture_wall", "Tekstury/kostka.png");
+    TextureManager::loadTexture("texture_wall", "Tekstury/tlo.png");
     TextureManager::loadTexture("enemy1", "Tekstury/emove1.png");
     TextureManager::loadTexture("enemy2", "Tekstury/emove2.png");
     TextureManager::loadTexture("enemy3", "Tekstury/emove3.png");
@@ -47,7 +47,7 @@ int main()
     sf::Sprite wall;
     wall.setTexture(*TextureManager::getTexture("texture_wall"));
     wall.setScale(1, 1);
-    wall.setTextureRect(sf::IntRect(0, 0, 1280, 720));
+    wall.setTextureRect(sf::IntRect(0, 0, window.getSize().x, window.getSize().y));
 
     ///////////
 
@@ -159,16 +159,16 @@ int main()
         }
 */
         //sprawdzanie kolizji
-        for (unsigned int i = 0;i < wsk->bulletVec.size(); i++) {
+        for (unsigned int i = 0; i < wsk->bulletVec.size(); i++) {
             if (wsk->bulletVec[i].bullet.getPosition().x > window.getSize().x
                 || wsk->bulletVec[i].bullet.getPosition().x < 0
                 || wsk->bulletVec[i].bullet.getPosition().y > window.getSize().y
                 || wsk->bulletVec[i].bullet.getPosition().y < 0) {
                 wsk->bulletVec.erase(wsk->bulletVec.begin() + i);
-
             }
             if (wsk->bulletVec[i].bullet.getGlobalBounds().intersects(playerone.getGlobalBounds())) {
                 playerone.zdrowie(100, playerone_hp, *TextureManager::getTexture("texture_hp"));
+                wsk->bulletVec[i].collide(i, playerone, window);
                 wsk->bulletVec.erase(wsk->bulletVec.begin() + i);
 
 
@@ -192,16 +192,16 @@ int main()
 
         gra.level(*TextureManager::getTexture("enemy1"),window);
         //rysowanie
-        window.draw(wall);
+        window.draw(wall);//tlo
+        // gracz 1
         window.draw(player_hp);
         window.draw(playerone_hp);
         window.draw(player);
         window.draw(playerone);
-        //rysowanie zombie
+        //rysowanie zombie i sprawdzanie kolizji
         for (auto &z : gra.zombieVec) {
             if (gra.bite(player, z)) {
-                player.zdrowie(z.dmg, player_hp, *TextureManager::getTexture("texture_hp"));
-            }
+                player.zdrowie(z.dmg, player_hp, *TextureManager::getTexture("texture_hp"));}
             window.draw(z);
             z.find_way(player, czas);
              }

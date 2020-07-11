@@ -17,10 +17,9 @@ public:
     bool ismoving;// do sprawdzania czy postać sie porusza, ponieważ czasami trzeba prędkość pocisku zwiększyć
     sf::Sprite player_hp;
 private:
-    float health_ = 1000; // zdrowie czempiona naszego
-    float health_max = 1000;
+    float health_ = 100; // zdrowie czempiona naszego
+    float health_max = 100;
     int m_speed_ = 100;//predkość poruszania się
-    bool limit(float x,float y,sf::Sprite &postac);// jeszcze nie wiem ale byl na to jakiś zamysł
     std::string direction_="S"; // kierunek w która jest ustawiona postać oraz kierunek lotu pocisku ustawiony na S po to by pocisk nie stał w miejscu
 
 };

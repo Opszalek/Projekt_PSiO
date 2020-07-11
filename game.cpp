@@ -39,7 +39,7 @@ void game::begin()
     std::cout << "Milo mi cie widziec w Menel Defender" << std::endl;
     std::cout << "Wybierz poziom trudnosci 1-easy 2-medium 3-hard" << std::endl;
     std::cin >> bufor;
-    while (bufor != "1" && bufor != "2") {
+    while (bufor != "1" && bufor != "2" && bufor !="3") {
         std::cout << "Nie jasne??" << std::endl;
         std::cin >> bufor;
     }
@@ -68,7 +68,9 @@ void game::begin()
 
 bool game::bite(character &player, enemy &enemy)
 {
-    if (player.getGlobalBounds().intersects(enemy.getGlobalBounds())) {
+    if (player.getGlobalBounds().intersects(enemy.getGlobalBounds())
+        && (enemy.hit.getElapsedTime().asMilliseconds() > 300)) {
+        enemy.hit.restart();
         return true;
     } else {
         return false;

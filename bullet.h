@@ -29,7 +29,8 @@ public:
     int bullet_speed=800;
     sf::RectangleShape bullet;
     std::vector<Bullet> bulletVec;
-    int dmg;
+    int dmg=1;
+    bool collide(unsigned int &, sf::Sprite &,sf::Window&);
 
 private:
     std::string dir;

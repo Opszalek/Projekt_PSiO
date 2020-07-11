@@ -157,7 +157,3 @@ std::string character::direction()
 
     return direction_;
 }
-bool character::limit(float x, float y,sf::Sprite &postac)
-{
-
-}

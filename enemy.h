@@ -11,10 +11,11 @@ public:
     void find_way(sf::Sprite&,float);
     bool alive(float);
     int dmg;
+    sf::Clock hit;
 private:
-    float health_ = 1000;
-    float m_speed_ =50.0;
-    float health_max = 1000;
+    float health_ = 100.0;
+    float m_speed_ =40.0;
+    float health_max = 100.0;
 
 };
 

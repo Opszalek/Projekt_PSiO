@@ -26,6 +26,23 @@ void Bullet::fire(float time)
     }
 
 
+
+}
+
+bool Bullet::collide(unsigned int &i, sf::Sprite &obj, sf::Window &window)
+{
+    if (this->bullet.getGlobalBounds().intersects(obj.getGlobalBounds())) {
+        std::cout << "asfgas" << std::endl;
+        return true;
+    } else if (this->bullet.getPosition().x > window.getSize().x || this->bullet.getPosition().x < 0
+               || this->bullet.getPosition().y > window.getSize().y || this->bullet.getPosition().y < 0) {
+        bulletVec.erase(bulletVec.begin() + i);
+        return false;
+    } else {
+        return false;
+    }
+
+
 }
 /*
 void Bullet::shoot(character & player)
