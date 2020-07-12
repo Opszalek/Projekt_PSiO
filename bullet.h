@@ -13,7 +13,7 @@ public:
     Bullet(sf::Vector2f size, std::string dir_)
     {
         bullet.setSize(size);
-        bullet.setFillColor(sf::Color(100, 50, 250));
+        bullet.setFillColor(sf::Color::Black);
         dir = dir_;
     };
     Bullet();
@@ -30,7 +30,6 @@ public:
     sf::RectangleShape bullet;
     std::vector<Bullet> bulletVec;
     int dmg=1;
-    bool collide(unsigned int &, sf::Sprite &,sf::Window&);
 
 private:
     std::string dir;

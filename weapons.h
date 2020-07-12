@@ -5,20 +5,24 @@
 #include <vector>
 
 
+
 class weapons
 {
 public:
     weapons();
     int ammo;
-    int max_ammo;
+    int max_ammo=100;
     int dmg;
-    int fire_delay;
+    int dmg_uzi=10;
+    int dmg_pistol=10;
+    int fire_delay=100;
     void shoot(character &);
     std::vector<Bullet> bulletVec;
-    void change(int);
+    void change();
     int nr = 1;
     sf::Text ile_ammo;
     sf::Font font;
+
 
 };
 
