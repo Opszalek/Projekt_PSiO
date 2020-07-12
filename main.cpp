@@ -1,33 +1,32 @@
 #include <SFML/Window.hpp>
 #include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
 #include <iostream>
 #include <character.h>
 #include <TextureManager.h>
 #include <bullet.h>
 #include <enemy.h>
-
-
+#include <weapons.h>
+#include <game.h>
+#include <box.h>
 
 
 int main()
 {
+    game gra;
+    gra.begin();
+
+
     // Loading all textures in TextureManager
     TextureManager::loadTexture("texture_guy", "Tekstury/player.png");
+    TextureManager::loadTexture("over", "Tekstury/over.png");
     TextureManager::loadTexture("texture_hp", "Tekstury/hp.png");
-    TextureManager::loadTexture("texture_wall", "Tekstury/kostka.png");
-    TextureManager::loadTexture("enemy1", "Tekstury/emove1.png");
-    TextureManager::loadTexture("enemy2", "Tekstury/emove2.png");
-    TextureManager::loadTexture("enemy3", "Tekstury/emove3.png");
+    TextureManager::loadTexture("texture_wall", "Tekstury/tlo.png");
 
 
     // Create main Window
-    sf::RenderWindow window(sf::VideoMode(1280, 720), "Giereczka");
+    sf::RenderWindow window(sf::VideoMode(1280, 720), "Menel_Defender version pre-alpha 0.0000001 ");
 
-    // Create event
-    sf::Event event;
-
-    // Create clock
-    sf::Clock klok;
 
     //tekstury
 
@@ -42,157 +41,161 @@ int main()
     sf::Sprite wall;
     wall.setTexture(*TextureManager::getTexture("texture_wall"));
     wall.setScale(1, 1);
-    wall.setTextureRect(sf::IntRect(0, 0, 1280, 720));
+    wall.setTextureRect(sf::IntRect(0, 0, window.getSize().x, window.getSize().y));
 
     ///////////
-
+    sf::Sprite game_over;
+    game_over.setTexture(*TextureManager::getTexture("over"));
+    game_over.setOrigin(540, 540);
+    game_over.setPosition(window.getSize().x / 2, window.getSize().y / 2);
     //crate firtst character
-    sf::Sprite player_hp;
-    player_hp.setTexture(*TextureManager::getTexture("texture_hp"));
-    player_hp.setTextureRect(sf::IntRect(0, 0, 100, 10)); //left, top, width, height
-    player_hp.setPosition(250.0, 250.0);
 
-    character player;
-    player.setTexture(*TextureManager::getTexture("texture_guy"));
-    player.setTextureRect(sf::IntRect(0, 0, 49, 43));
-    player.setOrigin(25, 21);
-    player.setPosition(300.0, 300.0);
+    sf::Music gun1;
+    gun1.openFromFile("Tekstury/gun2.ogg");
+    sf::Music gun2;
+    gun2.openFromFile("Tekstury/gun1.ogg");
+    gun1.play();
+    gun1.setLoop(true);
+    gun2.play();
+    gun2.setLoop(true);
 
-    // Create second player character
-    sf::Sprite playerone_hp;
-    playerone_hp.setTexture(*TextureManager::getTexture("texture_hp"));
-    playerone_hp.setTextureRect(sf::IntRect(0, 0, 100, 10)); //left, top, width, height
-    playerone_hp.setPosition(350.0, 350.0);
-
-    character playerone;
-    playerone.setTexture(*TextureManager::getTexture("texture_guy"));
-    playerone.setTextureRect(sf::IntRect(0, 0, 49, 43));
-    playerone.setOrigin(25, 21);
-    playerone.setPosition(400.0, 400.0);
-
-    //create enemy
-    std::vector<enemy> zombieVec;
-
+    character player(*TextureManager::getTexture("texture_guy"),*TextureManager::getTexture("texture_hp"));
 
 
 
     ///////////////
     //Obiekty
 
+    sf::Event event;
+
+    weapons gun;
+
+    std::vector<enemy> zombieVec;
     std::vector<Bullet> bulletVec;
 
+    sf::Clock klok;
     sf::Clock delay;
     sf::Clock delay2;
     sf::Clock delay3;
-    int razraz = 0;
+
     while (window.isOpen()) {
         while (window.pollEvent(event)) {
-            // "close requested" event: we close the window
+
             if (event.type == sf::Event::Closed)
                 window.close();
+//zmiana weaponsa
+            if (event.type == sf::Event::KeyPressed) {
+                if (event.key.code == sf::Keyboard::Q) {
+                    gun.change();
+                }
+            }
         }
 
         sf::Time elapsed = klok.restart();
         float czas = elapsed.asSeconds();
-        window.clear(sf::Color::White);
-
-        //funkcje
-
-        player.movement(player, czas, player_hp);
-        playerone.movement2(playerone, czas, playerone_hp);
 
 
+//poruszanie sie
+        if(player.health_>0){
+        player.movement(player, czas, gra.trudnosc, window);
 
-
-        //testy
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
-            playerone.zdrowie(-1, playerone_hp, *TextureManager::getTexture("texture_hp"));
-
-        }
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::K)&& (delay3.getElapsedTime().asMilliseconds() > 300)) {
-
-        }
-
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Z) && (delay2.getElapsedTime().asMilliseconds() > 50)) {
-            enemy zombie;
-            zombie.setTexture(*TextureManager::getTexture("enemy1"));
-            zombie.setTextureRect(sf::IntRect(0, 0, 288, 311));
-            zombie.setPosition(rand() % window.getSize().x , rand() % window.getSize().y);
-            zombie.scale(0.3, 0.3);
-            zombie.setOrigin(144, 155);
-            zombieVec.emplace_back(zombie);
-            delay2.restart();
-            razraz++;
-            std::cout << razraz << std::endl;
-        }
-
-
-
-        //tworzenie pocisków
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::M)
-            && (delay.getElapsedTime().asMilliseconds() > 30)) {
-            Bullet newbullet(sf::Vector2f(10, 10), player.direction());
-            newbullet.setPos(sf::Vector2f(player.getPosition().x + 10, player.getPosition().y + 20));
-            if (player.ismoving == true) {
-                newbullet.bullet_speed = newbullet.bullet_speed + player.m_speed();
-            }
-            bulletVec.emplace_back(newbullet);
-
+//strzelanie
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)
+            && (delay.getElapsedTime().asMilliseconds() > gun.fire_delay)) {
+            gun.shoot(player);
             delay.restart();
-        }
-        //sprawdzanie kolizji
-        for (auto i = 0;i <bulletVec.size(); i++) {
-            if (bulletVec[i].bullet.getPosition().x > window.getSize().x
-                || bulletVec[i].bullet.getPosition().x < 0
-                || bulletVec[i].bullet.getPosition().y > window.getSize().y
-                || bulletVec[i].bullet.getPosition().y < 0) {
-                bulletVec.erase(bulletVec.begin() + i);
-
+            if (gun.nr == 1) {
+                gun1.setVolume(50);
+            } else {
+                gun1.setVolume(0);
             }
-            if (bulletVec[i].bullet.getGlobalBounds().intersects(playerone.getGlobalBounds())) {
-                playerone.zdrowie(100, playerone_hp, *TextureManager::getTexture("texture_hp"));
-                bulletVec.erase(bulletVec.begin() + i);
-
-
+            if (gun.nr == 2 && gun.ammo > 0) {
+                gun2.setVolume(50);
+            } else {
+                gun2.setVolume(0);
             }
 
-            for (auto k = 0; k < zombieVec.size(); k++) {
-                for (auto i = 0; i < bulletVec.size(); i++) {
-                    if (bulletVec[i].bullet.getGlobalBounds().intersects(
-                            zombieVec[k].getGlobalBounds())) {
-                        bulletVec.erase(bulletVec.begin() + i);
-                        if (zombieVec[k].alive(100)) {
-                            zombieVec.erase(zombieVec.begin() + k);
-                            razraz--;
+        } else if (!(sf::Keyboard::isKeyPressed(sf::Keyboard::Space))) {
+            gun1.setVolume(0);
+            gun2.setVolume(0);
+       }
+
+
+        //sprawdzanie kolizji z oknem
+        for (unsigned int i = 0; i < gun.bulletVec.size(); i++) {
+            if (gun.bulletVec[i].bullet.getPosition().x > window.getSize().x
+                || gun.bulletVec[i].bullet.getPosition().x < 0
+                || gun.bulletVec[i].bullet.getPosition().y > window.getSize().y
+                || gun.bulletVec[i].bullet.getPosition().y < 0) {
+                gun.bulletVec.erase(gun.bulletVec.begin() + i);
+            }
+
+            //kolizje zombie z kulą
+            for (unsigned int k = 0; k < gra.zombieVec.size(); k++) {
+                for (unsigned int i = 0; i < gun.bulletVec.size(); i++) {
+                    if (gun.bulletVec[i].bullet.getGlobalBounds().intersects(
+                            gra.zombieVec[k].getGlobalBounds())) {
+
+                        gun.bulletVec.erase(gun.bulletVec.begin() + i);
+                        if (gra.zombieVec[k].alive(gun.bulletVec[i].dmg)) {
+                            gra.zombieVec.erase(gra.zombieVec.begin() + k);
+                            gra.level(window);
+                            gra.points += 10*gra.trudnosc;
+                            gra.punkty.setString("Points :" + std::to_string(gra.points));
                         }
                     }
                 }
             }
-
         }
+        //poziomy
 
+        gra.level(window, player, gun);
         //rysowanie
-        window.draw(wall);
-        window.draw(player_hp);
-        window.draw(playerone_hp);
-        window.draw(player);
-        window.draw(playerone);
+        window.draw(wall); //tlo
 
-        for (auto &z : zombieVec) {
+        gra.rysowanie(window);
+        window.draw(player.player_hp);
+
+        window.draw(player);
+
+        //rysowanie zombie i szukanie way to playersa
+        for (auto &z : gra.zombieVec) {
+            if (gra.bite(player, z)) {
+                player.zdrowie(z.dmg);
+            }
             window.draw(z);
             z.find_way(player, czas);
-            if (sf::Keyboard::isKeyPressed(sf::Keyboard::K)
-                && (delay3.getElapsedTime().asMilliseconds() > 300)) {
-                z.rotate(10);
+        }
+        //rysowanie bulletsow
+        for (auto &r : gun.bulletVec) {
+            r.drawo(window);
+            r.fire(czas);
+        }
+        window.draw(gun.ile_ammo);
+    }
+//Koniec gry oraz gra od nowa
+        if (player.health_ <= 0) {
+            gun1.stop();
+            gun2.stop();
+            window.clear(sf::Color::White);
+            gra.play_again(window);
+            window.draw(game_over);
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::G)) {
+                gra.points = 0;
+                gun.ammo = gun.max_ammo = 100;
+                gun.dmg_uzi = 10;
+                gun.dmg_pistol = 10;
+                player.health_ = 100;
+                player.zdrowie(0);
+                gra.punkty.setString("Points");
+                gun1.play();
+                gun1.setLoop(true);
+                gun2.play();
+                gun2.setLoop(true);
             }
 
         }
-        for (auto &r : bulletVec) {
-            r.drawo(window);
-            r.fire(czas);}
-
-
         window.display();
- }
-    return 0;
+    }
+return 0;
 }

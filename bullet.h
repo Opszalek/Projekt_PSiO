@@ -6,18 +6,20 @@
 #include <character.h>
 
 
+
 class Bullet : public sf::Sprite
 {
 public:
     Bullet(sf::Vector2f size, std::string dir_)
     {
         bullet.setSize(size);
-        bullet.setFillColor(sf::Color(100, 50, 250));
+        bullet.setFillColor(sf::Color::Black);
         dir = dir_;
     };
+    Bullet();
 
     void fire(float time); //funkcja od ruchu pocisku
-    void shoot(character);//funkcja od tworzenia pocisków
+   // void shoot(character&);//funkcja od tworzenia pocisków
     void setPos(sf::Vector2f newPos) {
         bullet.setPosition(newPos);
     }
@@ -27,6 +29,8 @@ public:
     int bullet_speed=800;
     sf::RectangleShape bullet;
     std::vector<Bullet> bulletVec;
+    int dmg=1;
+
 private:
     std::string dir;
 
